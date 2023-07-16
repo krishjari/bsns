@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Color Selection</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    select,
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    @media (min-width: 768px) {
+      /* Adjust styles for larger screens */
+      label {
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 0;
+      }
+
+      select,
+      input[type="number"] {
+        width: auto;
+        margin-bottom: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <label for="color">Select a color:</label>
+  <select id="color" onchange="updateColorOptions()">
+    <option value="red">Red</option>
+    <option value="blue">Blue</option>
+    <option value="green">Green</option>
+  </select>
+
+  <br>
+
+  <label for="numColors">Number of colors:</label>
+  <input type="number" id="numColors" min="1" value="1">
+
+  <br>
+
+  <button onclick="sendWhatsAppMessage()">Send via WhatsApp</button>
+
+  <script>
+    function updateColorOptions() {
+      var colorSelect = document.getElementById("color");
+      var numColorsInput = document.getElementById("numColors");
+      var selectedColor = colorSelect.value;
+      var numColors = numColorsInput.value;
+
+      // Remove existing color options
+      while (colorSelect.options.length > 3) {
+        colorSelect.remove(colorSelect.options.length - 1);
+      }
+
+      // Add new color options
+      for (var i = 1; i <= numColors; i++) {
+        var option = document.createElement("option");
+        option.value = selectedColor + i;
+        option.text = selectedColor + i;
+        colorSelect.add(option);
+      }
+    }
+
+    function sendWhatsAppMessage() {
+      var colorSelect = document.getElementById("color");
+      var numColorsInput = document.getElementById("numColors");
+      var selectedColor = colorSelect.value;
+      var numColors = numColorsInput.value;
+
+      // Create the message content
+      var message = "Color: " + selectedColor + ", Number of Colors: " + numColors;
+
+      // Prepare the WhatsApp message URL
+      var whatsappUrl = "https://api.whatsapp.com/send?phone=9099739332&text=" + encodeURIComponent(message);
+
+      // Open the WhatsApp message URL in a new window or tab
+      window.open(whatsappUrl);
+
+      // Show a confirmation message
+      alert("WhatsApp message sent successfully!");
+    }
+  </script>
+</body>
+</html>
