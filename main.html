@@ -45,26 +45,63 @@
   </style>
 </head>
 <body>
-  <label for="color">Select a color:</label>
-  <select id="color" onchange="updateColorOptions()">
-    <option value="red">Red</option>
-    <option value="blue">Blue</option>
-    <option value="green">Green</option>
-  </select>
+  <h3>Color Selection</h3>
+  <div id="colorInputs">
+    <div>
+      <label for="color1">Color 1:</label>
+      <select id="color1" onchange="updateColorOptions(1)">
+        <option value="red">Red</option>
+        <option value="blue">Blue</option>
+        <option value="green">Green</option>
+      </select>
+    </div>
+    <div>
+      <label for="numColors1">Number of colors:</label>
+      <input type="number" id="numColors1" min="1" value="1">
+    </div>
+    <div>
+      <label for="numTar1">Number of tar:</label>
+      <input type="number" id="numTar1" min="1" value="1">
+    </div>
+  </div>
 
-  <br>
-
-  <label for="numColors">Number of colors:</label>
-  <input type="number" id="numColors" min="1" value="1">
-
-  <br>
-
+  <button onclick="addColorSelection()">Add Color Selection</button>
   <button onclick="sendWhatsAppMessage()">Send via WhatsApp</button>
 
   <script>
-    function updateColorOptions() {
-      var colorSelect = document.getElementById("color");
-      var numColorsInput = document.getElementById("numColors");
+    var colorSelectionCount = 1;
+
+    function addColorSelection() {
+      colorSelectionCount++;
+
+      var colorInputsDiv = document.getElementById("colorInputs");
+
+      var newColorDiv = document.createElement("div");
+      newColorDiv.innerHTML = `
+        <div>
+          <label for="color${colorSelectionCount}">Color ${colorSelectionCount}:</label>
+          <select id="color${colorSelectionCount}" onchange="updateColorOptions(${colorSelectionCount})">
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+          </select>
+        </div>
+        <div>
+          <label for="numColors${colorSelectionCount}">Number of colors:</label>
+          <input type="number" id="numColors${colorSelectionCount}" min="1" value="1">
+        </div>
+        <div>
+          <label for="numTar${colorSelectionCount}">Number of tar:</label>
+          <input type="number" id="numTar${colorSelectionCount}" min="1" value="1">
+        </div>
+      `;
+
+      colorInputsDiv.appendChild(newColorDiv);
+    }
+
+    function updateColorOptions(selectionIndex) {
+      var colorSelect = document.getElementById("color" + selectionIndex);
+      var numColorsInput = document.getElementById("numColors" + selectionIndex);
       var selectedColor = colorSelect.value;
       var numColors = numColorsInput.value;
 
@@ -83,13 +120,18 @@
     }
 
     function sendWhatsAppMessage() {
-      var colorSelect = document.getElementById("color");
-      var numColorsInput = document.getElementById("numColors");
-      var selectedColor = colorSelect.value;
-      var numColors = numColorsInput.value;
+      var message = "";
 
-      // Create the message content
-      var message = "Color: " + selectedColor + ", Number of Colors: " + numColors;
+      for (var i = 1; i <= colorSelectionCount; i++) {
+        var colorSelect = document.getElementById("color" + i);
+        var numColorsInput = document.getElementById("numColors" + i);
+        var numTarInput = document.getElementById("numTar" + i);
+        var selectedColor = colorSelect.value;
+        var numColors = numColorsInput.value;
+        var numTar = numTarInput.value;
+
+        message += "Color " + i + ": " + selectedColor + ", Number of Colors: " + numColors + ", Number of Tar: " + numTar + "\n";
+      }
 
       // Prepare the WhatsApp message URL
       var whatsappUrl = "https://api.whatsapp.com/send?phone=9099739332&text=" + encodeURIComponent(message);
